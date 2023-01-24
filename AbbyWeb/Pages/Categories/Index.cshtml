@@ -1,0 +1,42 @@
+﻿@page
+@model AbbyWeb.Pages.Categories.IndexModel
+@if (TempData["success"]!=null)
+{
+    <h2>@TempData["success"]</h2>
+}
+<div class="container p-3"> 
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-page="Create" class="btn btn-primary "><i class="bi bi-pencil-square"></i>&nbsp;Create New Category</a>
+        </div>
+    </div>
+    <br />
+
+            <table class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr class="text-center">
+                        <th style="width:33%;">Category Name</th>
+                        <th style="width:33%;">Category Order</th>
+                        <th style="width:33%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CategoryList)
+                    {
+                        <tr class="text-center" >
+                            <td >@item.Name</td>
+                            <td >@item.DisplayOrder</td>
+                            <td>
+                        <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-outline-info mx-2"><i class="bi bi-pencil-square "></i>&nbsp;Edit</a>
+                        &nbsp;<a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-2"><i class="bi bi-trash "></i>&nbsp;Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+    
+</div>
