@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AbbyWeb.Migrations
+namespace App.DataAccess.Migrations
 {
     public partial class initialmigration : Migration
     {

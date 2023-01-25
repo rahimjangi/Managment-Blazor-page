@@ -1,35 +1,32 @@
-using AbbyWeb.Data;
-using AbbyWeb.Model;
+using App.DataAccess.Data;
+using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AbbyWeb.Pages.Categories
+namespace AbbyWeb.Pages.Admin.FoodTypes
 {
     [BindProperties]
     public class EditModel : PageModel
     {
-        public Category Category { get; set; }
         private readonly ApplicationDbContext _db;
+        public FoodType FoodType { get; set; }
 
         public EditModel(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public void OnGet(int id)
+        public async Task OnGet(int id)
         {
-            Category=_db.Category.Find(id);
+            FoodType = await _db.FoodTypes.FindAsync(id);
         }
 
         public async Task<IActionResult> OnPost()
         {
             if(ModelState.IsValid)
             {
-                
-                
-                _db.Category.Update(Category);
-                await _db.SaveChangesAsync();
-                TempData["success"] = "Category edited successfully";
+                 _db.FoodTypes.Update(FoodType);
+                _db.SaveChangesAsync();
                 return RedirectToPage("Index");
             }
             else

@@ -1,17 +1,15 @@
-using AbbyWeb.Data;
-using AbbyWeb.Model;
+using App.DataAccess.Data;
+using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AbbyWeb.Pages.Categories
+namespace AbbyWeb.Pages.Admin.FoodTypes
 {
     [BindProperties]
     public class CreateModel : PageModel
     {
-        
-        public Category Category { get; set; }
         private readonly ApplicationDbContext _db;
-
+        public FoodType FoodType { get; set; }
         public CreateModel(ApplicationDbContext db)
         {
             _db = db;
@@ -19,20 +17,14 @@ namespace AbbyWeb.Pages.Categories
 
         public void OnGet()
         {
+            
         }
-
         public async Task<IActionResult> OnPost()
-
         {
-            if (Category.Name == Category.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("Category.Name", "Name and order can not be the same!");
-            }
             if(ModelState.IsValid)
             {
-                var savedCategory = await _db.Category.AddAsync(Category);
+                await _db.FoodTypes.AddAsync(FoodType);
                 await _db.SaveChangesAsync();
-                TempData["success"] = "Category created successfully";
                 return RedirectToPage("Index");
             }
             else

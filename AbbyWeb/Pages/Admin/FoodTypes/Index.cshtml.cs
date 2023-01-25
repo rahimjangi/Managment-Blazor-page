@@ -1,23 +1,25 @@
-using AbbyWeb.Data;
-using AbbyWeb.Model;
+using App.DataAccess.Data;
+using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
-namespace AbbyWeb.Pages.Categories
+namespace AbbyWeb.Pages.Admin.FoodTypes
 {
+    [BindProperties]
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _db;
-        public IEnumerable<Category> CategoryList;
-
+        public IEnumerable<FoodType> FoodTypeList { get; set; }
         public IndexModel(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public void OnGet()
+        public  void OnGet()
         {
-            CategoryList = _db.Category.ToList();
+            FoodTypeList =  _db.FoodTypes.ToList();
+
         }
     }
 }

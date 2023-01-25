@@ -1,4 +1,4 @@
-using AbbyWeb.Data;
+using App.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

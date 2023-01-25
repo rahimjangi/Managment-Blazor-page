@@ -1,16 +1,15 @@
-using AbbyWeb.Data;
-using AbbyWeb.Model;
+using App.DataAccess.Data;
+using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
-namespace AbbyWeb.Pages.Categories
+namespace AbbyWeb.Pages.Admin.FoodTypes
 {
     [BindProperties]
     public class DeleteModel : PageModel
     {
-        public Category Category { get; set; }
         private readonly ApplicationDbContext _db;
+        public FoodType FoodType { get; set; }
 
         public DeleteModel(ApplicationDbContext db)
         {
@@ -19,17 +18,17 @@ namespace AbbyWeb.Pages.Categories
 
         public void OnGet(int id)
         {
-            Category = _db.Category.FirstOrDefault(m=>m.Id==id);
+            FoodType = _db.FoodTypes.Find(id);
         }
 
         public async Task<IActionResult> OnPost()
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-               _db.Category.Remove(Category);
+                 _db.FoodTypes.Remove(FoodType);
                 _db.SaveChangesAsync();
-                TempData["success"] = "Category deleted successfully";
                 return RedirectToPage("Index");
+
             }
             else
             {
