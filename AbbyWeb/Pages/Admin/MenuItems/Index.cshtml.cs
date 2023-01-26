@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace AbbyWeb.Pages.Admin.FoodTypes
+namespace AbbyWeb.Pages.Admin.MenuItems
 {
     [BindProperties]
     public class IndexModel : PageModel
     {
         private readonly IUnitOfWork _db;
-        public IEnumerable<FoodType> FoodTypeList { get; set; }
+        public IEnumerable<MenuItem> MenuItems { get; set; }
         public IndexModel(IUnitOfWork db)
         {
             _db = db;
@@ -19,7 +19,7 @@ namespace AbbyWeb.Pages.Admin.FoodTypes
 
         public  void OnGet()
         {
-            FoodTypeList = _db.FoodType.GetAll();
+            MenuItems = _db.MenuItem.GetAll();
 
         }
     }

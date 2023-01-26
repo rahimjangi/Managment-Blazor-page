@@ -4,29 +4,32 @@ using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AbbyWeb.Pages.Admin.FoodTypes
+namespace AbbyWeb.Pages.Admin.MenuItems
 {
     [BindProperties]
-    public class CreateModel : PageModel
+    public class DeleteModel : PageModel
     {
         private readonly IUnitOfWork _db;
-        public FoodType FoodType { get; set; }
-        public CreateModel(IUnitOfWork db)
+        public MenuItem MenuItem { get; set; }
+
+        public DeleteModel(IUnitOfWork db)
         {
             _db = db;
         }
 
-        public void OnGet()
+        public void OnGet(int id)
         {
-            
+            MenuItem = _db.MenuItem.GetFirstOrDefault(f=>f.Id==id);
         }
+
         public async Task<IActionResult> OnPost()
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _db.FoodType.Add(FoodType);
+                _db.MenuItem.Remove(MenuItem);
                 _db.Save();
                 return RedirectToPage("Index");
+
             }
             else
             {

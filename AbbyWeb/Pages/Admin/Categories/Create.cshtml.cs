@@ -1,4 +1,5 @@
 using App.DataAccess.Data;
+using App.DataAccess.Repository.IRepository;
 using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,9 +11,10 @@ public class CreateModel : PageModel
 {
 
     public Category Category { get; set; }
-    private readonly ApplicationDbContext _db;
+    //private readonly ApplicationDbContext _db;
+    private readonly IUnitOfWork _db;
 
-    public CreateModel(ApplicationDbContext db)
+    public CreateModel(IUnitOfWork db)
     {
         _db = db;
     }
@@ -21,7 +23,7 @@ public class CreateModel : PageModel
     {
     }
 
-    public async Task<IActionResult> OnPost()
+    public IActionResult OnPost()
 
     {
         if (Category.Name == Category.DisplayOrder.ToString())
@@ -30,8 +32,8 @@ public class CreateModel : PageModel
         }
         if (ModelState.IsValid)
         {
-            var savedCategory = await _db.Category.AddAsync(Category);
-            await _db.SaveChangesAsync();
+            _db.Category.Add(Category);
+            _db.Save();
             TempData["success"] = "Category created successfully";
             return RedirectToPage("Index");
         }

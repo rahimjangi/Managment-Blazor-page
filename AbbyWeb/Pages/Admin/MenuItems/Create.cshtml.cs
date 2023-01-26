@@ -4,13 +4,13 @@ using App.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AbbyWeb.Pages.Admin.FoodTypes
+namespace AbbyWeb.Pages.Admin.MenuItems
 {
     [BindProperties]
     public class CreateModel : PageModel
     {
         private readonly IUnitOfWork _db;
-        public FoodType FoodType { get; set; }
+        public MenuItem MenuItem{ get; set; }
         public CreateModel(IUnitOfWork db)
         {
             _db = db;
@@ -24,7 +24,7 @@ namespace AbbyWeb.Pages.Admin.FoodTypes
         {
             if(ModelState.IsValid)
             {
-                _db.FoodType.Add(FoodType);
+                _db.MenuItem.Add(MenuItem);
                 _db.Save();
                 return RedirectToPage("Index");
             }
