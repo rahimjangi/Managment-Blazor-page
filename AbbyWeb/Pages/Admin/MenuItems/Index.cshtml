@@ -4,40 +4,31 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Category List</h2>
+            <h2 class="text-primary">Menu item List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-page="Create" class="btn btn-primary "><i class="bi bi-pencil-square"></i>&nbsp;Create Food Type</a>
+            <a asp-page="upsert" class="btn btn-primary "><i class="bi bi-pencil-square"></i>&nbsp;Create Food Type</a>
         </div>
     </div>
     <br />
 
-    <table class="table table-bordered table-striped" style="width:100%">
+    <table class="table table-bordered table-striped" style="width:100%" id="menuitem_data">
         <thead>
             <tr class="text-center">
                 <th>Name</th>
-                <th>Description</th>
-                <th>Image</th>
                 <th>Price</th>
                 <th>Food Type</th>
                 <th>Category</th>
-                <th>Actions</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var item in Model.MenuItems)
-            {
-                <tr class="text-center">
-                    <td>@item.Id</td>
-                    <td>@item.Name</td>
-                    <td>
-                        <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-outline-info mx-2"><i class="bi bi-pencil-square "></i>&nbsp;Edit</a>
-                        &nbsp;<a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-2"><i class="bi bi-trash "></i>&nbsp;Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
+        
     </table>
 
 
 </div>
+
+@section Scripts{
+    <script src="~/js/menuItem.js"></script>
+}
+

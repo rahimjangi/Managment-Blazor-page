@@ -20,9 +20,11 @@ public class MenuItem
     public string Image { get; set; }
     [Range(1,1000,ErrorMessage ="The price should be between 1$ and 1000$")]
     public double Price { get; set; }
+    [Display(Name ="Food Type")]
     public int FoodTypeId { get; set; }
     [ForeignKey("FoodTypeId")]
     public virtual FoodType FoodType { get; set; }
+    [Display(Name ="Category")]
     public int CategoryId { get; set; }
     [ForeignKey("CategoryId")]
     public virtual Category Category { get; set; }
