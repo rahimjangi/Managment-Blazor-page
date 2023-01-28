@@ -22,8 +22,12 @@ namespace AbbyWeb.Pages.Admin.MenuItems
             _WebHostEnvironment = webHostEnvironment;
         }
 
-        public void OnGet()
+        public void OnGet(int? id)
         {
+            if(id != null)
+            {
+                MenuItem=_db.MenuItem.GetFirstOrDefault(x => x.Id == id);
+            }
             CategoryList = _db.Category.GetAll().Select(i=>
             new SelectListItem()
             {
@@ -50,7 +54,8 @@ namespace AbbyWeb.Pages.Admin.MenuItems
                 {
                     files[0].CopyTo(filestreem);
                 }
-                MenuItem.Image = @"\Images\MenuItems" + fileNameNew + fileExtention;
+                MenuItem.Image = @"\Images\MenuItems\" + fileNameNew + fileExtention;
+                //MenuItem.Image = uploads + fileNameNew + fileExtention;
                 _db.MenuItem.Add(MenuItem);
                 _db.Save();
                 return RedirectToPage("Index");
@@ -58,6 +63,33 @@ namespace AbbyWeb.Pages.Admin.MenuItems
             else
             {
                 //Update
+                var objFromDb=_db.MenuItem.GetFirstOrDefault(m=>m.Id==MenuItem.Id);
+                if (files.Count() > 0)
+                {
+                    string fileNameNew = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(webRootPath, @"Images\MenuItems");
+                    var fileExtention = Path.GetExtension(files[0].FileName);
+                    //delete existing image
+                    var oldImagePath = Path.Combine(webRootPath, objFromDb.Image.TrimStart('\\'));
+                    if(System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                    // Handle new upload
+
+                    using (var filestreem = new FileStream(Path.Combine(uploads, fileNameNew + fileExtention), FileMode.Create))
+                    {
+                        files[0].CopyTo(filestreem);
+                    }
+                    MenuItem.Image = @"\Images\MenuItems\" + fileNameNew + fileExtention;
+                }
+                else
+                {
+                    MenuItem.Image=objFromDb.Image;
+                }
+                _db.MenuItem.Update(MenuItem);
+                _db.Save();
+                return RedirectToPage("Index");
             }
             return Page();
         }
