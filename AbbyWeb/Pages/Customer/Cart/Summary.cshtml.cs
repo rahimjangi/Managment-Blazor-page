@@ -4,7 +4,9 @@ using App.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Stripe.Checkout;
 using System.Security.Claims;
+using System.Xml.Linq;
 
 namespace AbbyWeb.Pages.Customer.Cart
 {
@@ -71,11 +73,97 @@ namespace AbbyWeb.Pages.Customer.Cart
                     };
                     _db.OrderDetails.Add(orderDetails);
                 }
-                _db.ShoppingCart.RemoveRange(ShoppingCartList);
+                //_db.ShoppingCart.RemoveRange(ShoppingCartList);
                 _db.Save();
+                var quantity = ShoppingCartList.ToList().Count;
+                var domain = "https://localhost:44383";
+                var unitAmmount = OrderHeader.OrderTotal;
+                var currency = "usd";
+                var name = "WebApp";
+                //return StripePayment(domain,OrderHeader.OrderTotal,"usd","WebApp",quantity,OrderHeader.Id);
+
+
+                var options = new SessionCreateOptions
+                {
+                    LineItems = new List<SessionLineItemOptions>(),
+                    PaymentMethodTypes= new List<string>
+                    {
+                        "card",
+                    },
+                    
+                        Mode = "payment",
+                        SuccessUrl = domain + $"/Customer/Cart/OrderConfirmation?id={OrderHeader.Id}",
+                        CancelUrl = domain + "/Customer/Cart/Index",
+                };
+                //Add line items
+                foreach (var item in ShoppingCartList)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.MenuItem.Price * 100),
+                            Currency = currency,
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.MenuItem.Name
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
+                
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                Response.Headers.Add("Location", session.Url);
+
+                OrderHeader.SessionId = session.Id;
+                OrderHeader.PaymentIntentId = session.PaymentIntentId;
+                _db.Save();
+                return new StatusCodeResult(303);
+
+
             }
 
-            return RedirectToPage("Index");
+            return Page();
+        }
+
+        private StatusCodeResult StripePayment(string domain,double unitAmmount,string currency,string name,int quantity,int orderId)
+        {
+            
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                    // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    PriceData= new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount=(long)(unitAmmount*100),
+                        Currency=currency,
+                        ProductData=new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name=name,
+                            Description="Total Distinct Item: "+quantity
+                        }
+                    },
+                    Quantity=1
+                  },
+                },
+                Mode = "payment",
+                SuccessUrl = domain + "/Customer/Cart/OrderConfirmation?id={orderId}",
+                CancelUrl = domain + "/Customer/Cart/Index",
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
         }
     }
 }
