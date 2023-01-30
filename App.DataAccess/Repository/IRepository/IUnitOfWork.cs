@@ -12,5 +12,8 @@ public interface IUnitOfWork:IDisposable
     IFoodTypeRepository FoodType { get; }
     IMenuItemRepository MenuItem { get; }
     IShoppingCartRepository ShoppingCart { get; }
+    IOrderDetailsRepository OrderDetails { get; }
+    IOrderHeaderRepository OrderHeader { get; }
+    IApplicationUserRepository ApplicationUser { get; }
     void Save();
 }
