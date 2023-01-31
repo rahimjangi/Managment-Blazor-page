@@ -22,5 +22,15 @@ namespace App.DataAccess.Repository
         {
             _db.OrderHeaders.Update(orderHeader);
         }
+
+        public void UpdateStatus(int id, string status)
+        {
+            var objFromDb=_db.OrderHeaders.FirstOrDefault(u => u.Id == id);
+            if(objFromDb != null)
+            {
+                objFromDb.Status = status;
+            }
+            
+        }
     }
 }

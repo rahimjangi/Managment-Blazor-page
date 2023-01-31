@@ -21,6 +21,7 @@ namespace App.Utility
         public const string StatusReady = "Ready_for_Pickup";
         public const string StatusCompleted = "Completed";
         public const string StatusRefunded = "Refunded";
+        public const string StatusCanceled = "Canceled";
 
 
     }

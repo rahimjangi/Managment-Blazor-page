@@ -1,5 +1,6 @@
 ﻿@page
 @model AbbyWeb.Pages.Admin.Order.OrderDetailsModel
+@using App.Utility
 
 <form method="post">
     <div class="border p-4 ml-1 backgroundWhite mt-4">
@@ -51,7 +52,7 @@
                         Order DateTime
                     </div>
                     <div class="col-md-9 col-12">
-                        <input value="@Model.OrderDetailsVM.OrderHeader.PickUpTime.ToShortDateString() @Model.OrderDetailsVM.OrderHeader.PickUpTime.ToShortTimeString()" disabled class="form-control" />
+                        <input asp-for="@Model.OrderDetailsVM.OrderHeader.PickUpTime" disabled class="form-control" />
                     </div>
                 </div>
                 <div class="row form-group py-1">
@@ -62,10 +63,12 @@
                         <textarea asp-for="@Model.OrderDetailsVM.OrderHeader.Comments" disabled class="form-control" rows="3"></textarea>
                     </div>
                 </div>
-                
+
             </div>
             <div class="col-lg-4 col-12">
-                <h4 class="d-flex justify-content-between align-content-center mb-3">
+                <button type="submit" disabled class="btn btn-outline-info form-control">@Model.OrderDetailsVM.OrderHeader.Status</button>
+                <h4 class="d-flex justify-content-between align-content-center mb-3 pt-3">
+
                     <span class="text-muted">Order ID</span>
                     <span class="badge badge-pill badge-secondry">@Model.OrderDetailsVM.OrderHeader.Id</span>
                 </h4>
@@ -86,14 +89,28 @@
                         <strong class="text-info">$@Model.OrderDetailsVM.OrderHeader.OrderTotal</strong>
                     </li>
                 </ul>
-                <button type="submit" class="btn btn-info form-control">ORDER STATUS</button>
+
                 <div class="row pt-3">
-                    <div class="col-6">
-                        <button type="submit" class="btn btn-warning form-control"><i class="bi bi-x-square"></i> Cancen Order</button>
-                    </div>
-                    <div class="col-6">
-                        <button type="submit" class="btn btn-danger form-control"><i class="bi bi-currency-dollar"></i> Refund Order</button>
-                    </div>
+                    @if (Model.OrderDetailsVM.OrderHeader.Status == SD.StatusReady &&
+                    (User.IsInRole(SD.ManagerRole) || User.IsInRole(SD.FrontDeskRole)))
+                    {
+                        <div class="col-12 pb-2">
+                            <button type="submit" disabled class="btn btn-primary form-control" asp-page-handler="OrderCompleted" asp-route-orderId="@Model.OrderDetailsVM.OrderHeader.Id">Complete Order</button>
+                        </div>
+                    }
+                    @if ((User.IsInRole(SD.ManagerRole) || User.IsInRole(SD.FrontDeskRole))
+                    && (Model.OrderDetailsVM.OrderHeader.Status == SD.StatusReady ||
+                    Model.OrderDetailsVM.OrderHeader.Status == SD.StatusSubmitted ||
+                    Model.OrderDetailsVM.OrderHeader.Status == SD.StatusInProcess))
+                    {
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-warning form-control" asp-page-handler="OrderCancel" asp-route-orderId="@Model.OrderDetailsVM.OrderHeader.Id"><i class="bi bi-x-square"></i> Cancen Order</button>
+                        </div>
+
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-danger form-control" asp-page-handler="OrderRefund" asp-route-orderId="@Model.OrderDetailsVM.OrderHeader.Id"><i class="bi bi-currency-dollar"></i> Refund Order</button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
