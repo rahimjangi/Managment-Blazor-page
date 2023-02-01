@@ -23,6 +23,8 @@ namespace App.Utility
         public const string StatusRefunded = "Refunded";
         public const string StatusCanceled = "Canceled";
 
+        public const string SessionCart = "SessionCart";
+
 
     }
 }

@@ -17,6 +17,7 @@ namespace AbbyWeb.Pages.Customer.Cart
         public OrderConfirmationModel(IUnitOfWork db)
         {
             _db = db;
+            
         }
 
         public void OnGet(int id)

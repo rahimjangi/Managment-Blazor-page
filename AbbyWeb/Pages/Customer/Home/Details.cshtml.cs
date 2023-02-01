@@ -1,5 +1,6 @@
 using App.DataAccess.Repository.IRepository;
 using App.Models;
+using App.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -49,6 +50,9 @@ public class DetailsModel : PageModel
             {
                 _db.ShoppingCart.Add(ShoppingCart);
                 _db.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                    _db.ShoppingCart.GetAll(u=>u.ApplicationUserId== ShoppingCart.ApplicationUserId).ToList().Count
+                    );
             }
 
             return RedirectToPage("Index");
