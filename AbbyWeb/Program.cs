@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using App.Utility;
 using Stripe;
+using AbbyWeb.MiddleWares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,12 @@ builder.Services.AddSession(options =>
     
 });
 
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = "563572779158719";
+    options.AppSecret = "d1baa22c1a171c3567ebd41868cb29a3";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,5 +71,6 @@ app.UseSession();
 
 app.MapRazorPages();
 app.MapControllers();
+app.UseCustomMiddleWare();
 
 app.Run();
