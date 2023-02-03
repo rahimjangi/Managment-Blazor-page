@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="NonRunnableFiles\" />
     <Folder Include="wwwroot\Images\MenuItems\" />
   </ItemGroup>
 

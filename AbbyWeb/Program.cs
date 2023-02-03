@@ -59,6 +59,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseStaticFiles("/NonRunnableFiles");
 
 app.UseRouting();
 string key=builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
